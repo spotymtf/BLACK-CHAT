@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="login-screen">
+        <div class="login-container">
+            <2>WELCOME TO BLACK CHAT</h2>
+            <input type="text" id="username" placeholder="Entrez votre nom">
+            <button onclick="joinChat()">Rejoindre</button>
+        </div>
+    </div>
+
+    <div id="chat-screen" style="display: none;">
+        <div id="messages"></div>
+        <div class="input-area">
+            <input type="text" id="message-input" placeholder="Écrivez votre message...">
+            <button id="voice-btn" onclick="toggleVoiceRecording()">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>

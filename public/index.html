@@ -3,69 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Chat App</title>
+    <title>black chat</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="login-screen">
-        <div class="login-container">
-            <h2>Welcome to ModernChat</h2>
-            <input type="text" id="login-username" placeholder="Enter your username">
-            <input type="password" id="login-password" placeholder="Enter your password">
-            <button onclick="login()">Log In</button>
-            <p class="small-text">
-                Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a>
+    <!-- Sign-Up Screen -->
+    <div id="sign-up-screen" class="auth-screen">
+        <div class="auth-container">
+            <h2>Sign Up</h2>
+            <input type="text" id="signup-username" placeholder="Enter username">
+            <input type="text" id="signup-mobile" placeholder="Enter mobile number">
+            <input type="password" id="signup-password" placeholder="Enter password">
+            <label for="signup-profile-picture" class="file-upload">Upload Profile Picture</label>
+            <input type="file" id="signup-profile-picture" style="display: none;">
+            <button id="signup-button">Sign Up</button>
+            <p class="auth-footer">
+                Already have an account? <a href="#" onclick="showView('login-screen')">Log In</a>
             </p>
         </div>
     </div>
 
-    <!-- Sign Up Screen -->
-    <div id="sign-up-screen" style="display: none;">
-        <div class="signup-container">
-            <h2>Create Your Account</h2>
-            <input type="text" id="signup-username" placeholder="Enter your username">
-            <input type="file" id="profile-picture" accept="image/*">
-            <input type="password" id="signup-password" placeholder="Create a password">
-            <button onclick="signUp()">Sign Up</button>
-            <p class="small-text">
-                Already have an account? <a href="#" onclick="showLogin()">Log In</a>
+    <!-- Login Screen -->
+    <div id="login-screen" class="auth-screen">
+        <div class="auth-container">
+            <h2>Log In</h2>
+            <input type="text" id="login-username-or-number" placeholder="Enter username or mobile number">
+            <input type="password" id="login-password" placeholder="Enter password">
+            <button id="login-button">Log In</button>
+            <p class="auth-footer">
+                Don't have an account? <a href="#" onclick="showView('sign-up-screen')">Sign Up</a>
             </p>
-            <p class="small-text">Created by Blaise Dave and Alvin Pieterson</p>
-            <button class="contact-creators">
-                <a href="https://wa.me/233533255746">Alvin Pieterson</a> | 
-                <a href="https://wa.me/50946904797">Spoty MTF</a>
+        </div>
+    </div>
+
+    <!-- Chat Screen -->
+    <div id="chat-screen" style="display: none;">
+        <header class="chat-header">
+            <div class="profile-icon" onclick="showView('profile-screen')">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <h2>Chat App</h2>
+        </header>
+        <div id="messages" class="messages"></div>
+        <div class="input-area">
+            <button id="add-file-btn" onclick="openFileUpload()">
+                <i class="fas fa-plus"></i>
+            </button>
+            <input type="file" id="file-upload" style="display: none;">
+            <input type="text" id="message-input" placeholder="Write your message...">
+            <button id="voice-btn" onclick="toggleVoiceRecording()">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
             </button>
         </div>
     </div>
 
-    <!-- Chat Interface -->
-    <div id="chat-screen" style="display: none;">
-        <div class="chat-header">
-            <h2>Black Chat</h2>
-            <button class="profile-btn" onclick="showProfile()"><i class="fas fa-user-circle"></i></button>
-        </div>
-        <div id="messages"></div>
-        <div class="input-area">
-            <button onclick="showMediaOptions()"><i class="fas fa-plus"></i></button>
-            <input type="text" id="message-input" placeholder="Write a message...">
-            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
-    <!-- Profile Management -->
-    <div id="profile-screen" style="display: none;">
-        <div class="profile-container">
+    <!-- Profile Screen -->
+    <div id="profile-screen" class="auth-screen">
+        <div class="auth-container">
             <h2>Profile Management</h2>
-            <img id="current-profile-pic" src="" alt="Profile Picture">
-            <input type="file" id="change-profile-picture" accept="image/*">
-            <input type="text" id="change-username" placeholder="Change your username">
-            <button onclick="saveProfile()">Save Changes</button>
-            <button onclick="logout()">Log Out</button>
+            <label for="update-profile-picture" class="file-upload">Change Profile Picture</label>
+            <input type="file" id="update-profile-picture" style="display: none;">
+            <input type="text" id="update-username" placeholder="Update username">
+            <button id="update-profile-button">Save Changes</button>
+            <button id="logout-button" onclick="logout()">Log Out</button>
+            <button onclick="showView('chat-screen')">Back to Chat</button>
         </div>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

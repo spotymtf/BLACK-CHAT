@@ -1,4 +1,4 @@
-/* General Styles */
+/* Base Reset */
 * {
     margin: 0;
     padding: 0;
@@ -48,24 +48,18 @@ body {
     cursor: pointer;
 }
 
-.auth-container button {
+button {
+    padding: 0.8rem;
     background: #0084ff;
     color: white;
     border: none;
-    padding: 0.8rem 1.5rem;
     border-radius: 8px;
     cursor: pointer;
-    margin: 0.5rem 0;
     transition: background 0.3s ease;
 }
 
-.auth-container button:hover {
+button:hover {
     background: #005bb5;
-}
-
-.auth-footer {
-    margin-top: 1rem;
-    font-size: 0.9rem;
 }
 
 /* Chat Screen */
@@ -82,81 +76,11 @@ body {
     padding: 1rem;
     background: #0084ff;
     color: white;
-    position: sticky;
-    top: 0;
 }
 
-.chat-header h2 {
-    flex: 1;
-    text-align: center;
-}
-
-.profile-icon {
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-/* Messages */
 .messages {
     flex: 1;
-    overflow-y: auto;
     padding: 1rem;
+    overflow-y: auto;
     background: #f0f2f5;
-}
-
-.message {
-    margin-bottom: 1rem;
-    max-width: 70%;
-}
-
-.message.received {
-    margin-right: auto;
-}
-
-.message.sent {
-    margin-left: auto;
-}
-
-.message-content {
-    background: white;
-    padding: 0.8rem;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.message.sent .message-content {
-    background: #0084ff;
-    color: white;
-}
-
-.timestamp {
-    font-size: 0.8rem;
-    color: #888;
-    margin-top: 0.3rem;
-}
-
-/* Input Area */
-.input-area {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem;
-    background: white;
-    border-top: 1px solid #ddd;
-}
-
-.input-area button {
-    background: #0084ff;
-    color: white;
-    border: none;
-    padding: 0.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-    margin: 0 0.5rem;
-}
-
-.input-area input {
-    flex: 1;
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
 }

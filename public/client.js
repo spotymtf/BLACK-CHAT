@@ -1,113 +1,51 @@
-const socket = io();
-let mediaRecorder;
-let audioChunks = [];
+function toggleAuth(authType) {
+    const signupForm = document.getElementById('signup-form');
+    const loginForm = document.getElementById('login-form');
 
-function joinChat() {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-    if (username && password) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('chat-screen').style.display = 'flex';
-        socket.emit('join', { username, password });
-    }
-}
-
-function sendMessage() {
-    const input = document.getElementById('message-input');
-    const message = input.value.trim();
-    if (message) {
-        socket.emit('chat-message', message);
-        input.value = '';
-    }
-}
-
-async function toggleVoiceRecording() {
-    const voiceBtn = document.getElementById('voice-btn');
-    
-    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-            audioChunks = [];
-
-            mediaRecorder.ondataavailable = (event) => {
-                audioChunks.push(event.data);
-            };
-
-            mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });
-                socket.emit('voice-message', audioBlob);
-                stream.getTracks().forEach(track => track.stop());
-            };
-
-            mediaRecorder.start();
-            voiceBtn.classList.add('recording');
-        } catch (err) {
-            console.error('Error accessing microphone:', err);
-            alert('Erreur d\'accès au microphone');
-        }
+    if (authType === 'signup') {
+        signupForm.style.display = 'block';
+        loginForm.style.display = 'none';
     } else {
-        mediaRecorder.stop();
-        voiceBtn.classList.remove('recording');
+        loginForm.style.display = 'block';
+        signupForm.style.display = 'none';
     }
 }
 
-socket.on('chat-message', (data) => {
-    const messages = document.getElementById('messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${data.sender === socket.id ? 'sent' : 'received'}`;
-    
-    messageDiv.innerHTML = `
-        <div class="message-content">
-            <strong>${data.username}:</strong>
-            <p>${data.text}</p>
-            <div class="timestamp">${data.timestamp}</div>
-        </div>
-    `;
-    
-    messages.appendChild(messageDiv);
-    messages.scrollTop = messages.scrollHeight;
-});
+function toggleProfile() {
+    const profileScreen = document.getElementById('profile-screen');
+    profileScreen.classList.toggle('show');
+}
 
-socket.on('voice-message', (data) => {
-    const messages = document.getElementById('messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${data.sender === socket.id ? 'sent' : 'received'}`;
-    
-    const audio = new Audio(URL.createObjectURL(new Blob([data.audio], { type: 'audio/ogg; codecs=opus' })));
-    
-    messageDiv.innerHTML = `
-        <div class="message-content">
-            <strong>${data.username}:</strong>
-            <p>
-                <button onclick="this.nextElementSibling.play()">
-                    <i class="fas fa-play"></i>
-                </button>
-                <audio style="display:none"></audio>
-            </p>
-            <div class="timestamp">${data.timestamp}</div>
-        </div>
-    `;
-    
-    messageDiv.querySelector('audio').src = URL.createObjectURL(new Blob([data.audio], { type: 'audio/ogg; codecs=opus' }));
-    messages.appendChild(messageDiv);
-    messages.scrollTop = messages.scrollHeight;
-});
+function saveProfile() {
+    const newUsername = document.getElementById('profile-username').value.trim();
+    const profilePicture = document.getElementById('profile-picture').files[0];
 
-socket.on('system-message', (data) => {
-    const messages = document.getElementById('messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'system-message';
-    messageDiv.innerHTML = `
-        <p>${data.text}</p>
-        <div class="timestamp">${data.timestamp}</div>
-    `;
-    messages.appendChild(messageDiv);
-    messages.scrollTop = messages.scrollHeight;
-});
-
-document.getElementById('message-input').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        sendMessage();
+    if (newUsername || profilePicture) {
+        // Send updates to server or save locally
+        console.log('Profile updated:', { newUsername, profilePicture });
     }
-});
+}
+
+function logout() {
+    // Reset UI and show login screen
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('chat-screen').style.display = 'none';
+    document.getElementById('profile-screen').classList.remove('show');
+}
+
+function uploadMedia(type) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = type === 'image' ? 'image/*' : 'audio/*';
+    input.onchange = () => {
+        const file = input.files[0];
+        if (file) {
+            socket.emit(type === 'image' ? 'image-upload' : 'audio-upload', file);
+        }
+    };
+    input.click();
+}
+
+function contactCreators() {
+    alert('Alvin Pieterson: https://wa.me/233533255746\nBlaise Dave: https://wa.me/50946904797');
+}

@@ -4,10 +4,11 @@ let audioChunks = [];
 
 function joinChat() {
     const username = document.getElementById('username').value.trim();
-    if (username) {
+    const password = document.getElementById('password').value.trim();
+    if (username && password) {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('chat-screen').style.display = 'flex';
-        socket.emit('join', username);
+        socket.emit('join', { username, password });
     }
 }
 

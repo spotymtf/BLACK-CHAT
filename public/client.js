@@ -4,7 +4,7 @@ let audioChunks = [];
 let users = [];
 let loggedInUser = null;
 
-// Helper to switch views
+// Switch Views
 function showView(viewId) {
     const views = ["login-screen", "sign-up-screen", "chat-screen", "profile-screen"];
     views.forEach((view) => {
@@ -12,23 +12,44 @@ function showView(viewId) {
     });
 }
 
-// Sign-Up and Login
+// Sign Up
 function signUp() {
     const username = document.getElementById("signup-username").value.trim();
     const password = document.getElementById("signup-password").value.trim();
-    const profilePicture = document.getElementById("profile-picture").files[0];
+    const mobileNumber = document.getElementById("signup-mobile").value.trim();
+    const profilePicture = document.getElementById("signup-profile-picture").files[0];
 
-    if (username && password) {
+    if (username && password && mobileNumber) {
+        const existingUser = users.find(
+            (user) => user.username === username || user.mobileNumber === mobileNumber
+        );
+
+        if (existingUser) {
+            alert("User with this username or mobile number already exists!");
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
-            users.push({ username, password, profilePicture: reader.result });
+            users.push({
+                username,
+                password,
+                mobileNumber,
+                profilePicture: reader.result,
+            });
             alert("Sign-Up Successful!");
             showView("login-screen");
         };
+
         if (profilePicture) {
             reader.readAsDataURL(profilePicture);
         } else {
-            users.push({ username, password, profilePicture: null });
+            users.push({
+                username,
+                password,
+                mobileNumber,
+                profilePicture: null,
+            });
             alert("Sign-Up Successful!");
             showView("login-screen");
         }
@@ -37,12 +58,15 @@ function signUp() {
     }
 }
 
+// Login
 function login() {
-    const username = document.getElementById("login-username").value.trim();
+    const usernameOrNumber = document.getElementById("login-username-or-number").value.trim();
     const password = document.getElementById("login-password").value.trim();
 
     const user = users.find(
-        (user) => user.username === username && user.password === password
+        (user) =>
+            (user.username === usernameOrNumber || user.mobileNumber === usernameOrNumber) &&
+            user.password === password
     );
 
     if (user) {
@@ -50,47 +74,8 @@ function login() {
         alert(`Welcome back, ${user.username}!`);
         showView("chat-screen");
     } else {
-        alert("Invalid username or password!");
+        alert("Invalid username/mobile number or password!");
     }
-}
-
-// Profile Management
-function showProfile() {
-    const profileScreen = document.getElementById("profile-screen");
-    const profilePicture = document.getElementById("current-profile-pic");
-    const usernameField = document.getElementById("change-username");
-
-    profilePicture.src = loggedInUser.profilePicture || "default-profile.png";
-    usernameField.value = loggedInUser.username;
-    showView("profile-screen");
-}
-
-function saveProfile() {
-    const newUsername = document.getElementById("change-username").value.trim();
-    const newProfilePicture = document.getElementById("change-profile-picture").files[0];
-
-    if (newUsername) {
-        loggedInUser.username = newUsername;
-    }
-
-    if (newProfilePicture) {
-        const reader = new FileReader();
-        reader.onload = () => {
-            loggedInUser.profilePicture = reader.result;
-            alert("Profile updated successfully!");
-            showView("chat-screen");
-        };
-        reader.readAsDataURL(newProfilePicture);
-    } else {
-        alert("Profile updated successfully!");
-        showView("chat-screen");
-    }
-}
-
-function logout() {
-    loggedInUser = null;
-    alert("Logged out successfully!");
-    showView("login-screen");
 }
 
 // Chat Features
@@ -103,11 +88,12 @@ function sendMessage() {
     }
 }
 
-function toggleVoiceRecording() {
+async function toggleVoiceRecording() {
     const voiceBtn = document.getElementById("voice-btn");
 
     if (!mediaRecorder || mediaRecorder.state === "inactive") {
-        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
             audioChunks = [];
 
@@ -123,76 +109,39 @@ function toggleVoiceRecording() {
 
             mediaRecorder.start();
             voiceBtn.classList.add("recording");
-        });
+        } catch (err) {
+            console.error("Error accessing microphone:", err);
+            alert("Error accessing microphone!");
+        }
     } else {
         mediaRecorder.stop();
         voiceBtn.classList.remove("recording");
     }
 }
 
-function showMediaOptions() {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/*,audio/*";
-    fileInput.onchange = () => {
-        const file = fileInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                if (file.type.startsWith("image/")) {
-                    socket.emit("image-message", { image: reader.result, sender: loggedInUser.username });
-                } else if (file.type.startsWith("audio/")) {
-                    socket.emit("audio-message", { audio: reader.result, sender: loggedInUser.username });
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-    fileInput.click();
-}
-
-// Handle Messages
+// Handle Incoming Messages
 socket.on("chat-message", (data) => {
     const messages = document.getElementById("messages");
     const messageDiv = document.createElement("div");
     messageDiv.className = `message ${data.sender === loggedInUser.username ? "sent" : "received"}`;
+
     messageDiv.innerHTML = `
         <div class="message-content">
             <strong>${data.sender}:</strong>
             <p>${data.text}</p>
+            <div class="timestamp">${data.timestamp}</div>
         </div>
     `;
+
     messages.appendChild(messageDiv);
     messages.scrollTop = messages.scrollHeight;
 });
 
-socket.on("image-message", (data) => {
-    const messages = document.getElementById("messages");
-    const messageDiv = document.createElement("div");
-    messageDiv.className = `message ${data.sender === loggedInUser.username ? "sent" : "received"}`;
-    messageDiv.innerHTML = `
-        <div class="message-content">
-            <strong>${data.sender}:</strong>
-            <img src="${data.image}" alt="Shared Image" class="shared-image">
-        </div>
-    `;
-    messages.appendChild(messageDiv);
-    messages.scrollTop = messages.scrollHeight;
-});
-
-socket.on("audio-message", (data) => {
-    const messages = document.getElementById("messages");
-    const messageDiv = document.createElement("div");
-    messageDiv.className = `message ${data.sender === loggedInUser.username ? "sent" : "received"}`;
-    messageDiv.innerHTML = `
-        <div class="message-content">
-            <strong>${data.sender}:</strong>
-            <audio controls>
-                <source src="${data.audio}" type="audio/ogg">
-                Your browser does not support the audio element.
-            </audio>
-        </div>
-    `;
-    messages.appendChild(messageDiv);
-    messages.scrollTop = messages.scrollHeight;
+// Add Event Listeners
+document.getElementById("signup-button").addEventListener("click", signUp);
+document.getElementById("login-button").addEventListener("click", login);
+document.getElementById("message-input").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        sendMessage();
+    }
 });

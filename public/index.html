@@ -10,9 +10,15 @@
 <body>
     <div id="login-screen">
         <div class="login-container">
-            <h2>sign up to Blackchat</h2>
+            <h2>Sign up to Blackchat</h2>
             <input type="text" id="username" placeholder="Enter your number">
-            <button onclick="joinChat()">send</button>
+            <input type="password" id="password" placeholder="Enter your password">
+            <button onclick="joinChat()">Send</button>
+            
+            <div style="margin-top: 1rem; color: #555;">
+                <p>Created by Blaise Dave and Alvin Pieterson</p>
+                <button id="contact-creators" onclick="showContactInfo()">Contact Creators</button>
+            </div>
         </div>
     </div>
 
@@ -31,5 +37,11 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
+    
+    <script>
+        function showContactInfo() {
+            alert(`Alvin Pieterson: https://wa.me/233533255746\nBlaise Dave: https://wa.me/50946904797`);
+        }
+    </script>
 </body>
 </html>

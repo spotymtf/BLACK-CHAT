@@ -1,51 +1,72 @@
-function toggleAuth(authType) {
-    const signupForm = document.getElementById('signup-form');
-    const loginForm = document.getElementById('login-form');
+let users = [];
+let loggedInUser = null;
 
-    if (authType === 'signup') {
-        signupForm.style.display = 'block';
-        loginForm.style.display = 'none';
+function showSignUp() {
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("sign-up-screen").style.display = "flex";
+}
+
+function showLogin() {
+    document.getElementById("login-screen").style.display = "flex";
+    document.getElementById("sign-up-screen").style.display = "none";
+}
+
+function signUp() {
+    const username = document.getElementById("signup-username").value;
+    const password = document.getElementById("signup-password").value;
+
+    if (username && password) {
+        users.push({ username, password });
+        alert("Sign Up Successful!");
+        showLogin();
     } else {
-        loginForm.style.display = 'block';
-        signupForm.style.display = 'none';
+        alert("Please fill in all fields!");
     }
 }
 
-function toggleProfile() {
-    const profileScreen = document.getElementById('profile-screen');
-    profileScreen.classList.toggle('show');
+function login() {
+    const username = document.getElementById("login-username").value;
+    const password = document.getElementById("login-password").value;
+
+    const user = users.find(
+        (user) => user.username === username && user.password === password
+    );
+
+    if (user) {
+        loggedInUser = user;
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("chat-screen").style.display = "flex";
+    } else {
+        alert("Invalid credentials!");
+    }
 }
 
-function saveProfile() {
-    const newUsername = document.getElementById('profile-username').value.trim();
-    const profilePicture = document.getElementById('profile-picture').files[0];
+function sendMessage() {
+    const input = document.getElementById("message-input");
+    const message = input.value.trim();
 
-    if (newUsername || profilePicture) {
-        // Send updates to server or save locally
-        console.log('Profile updated:', { newUsername, profilePicture });
+    if (message) {
+        // Append to messages
+        input.value = "";
     }
+}
+
+function showProfile() {
+    document.getElementById("chat-screen").style.display = "none";
+    document.getElementById("profile-screen").style.display = "flex";
 }
 
 function logout() {
-    // Reset UI and show login screen
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('chat-screen').style.display = 'none';
-    document.getElementById('profile-screen').classList.remove('show');
+    loggedInUser = null;
+    document.getElementById("profile-screen").style.display = "none";
+    document.getElementById("login-screen").style.display = "flex";
 }
 
-function uploadMedia(type) {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = type === 'image' ? 'image/*' : 'audio/*';
-    input.onchange = () => {
-        const file = input.files[0];
-        if (file) {
-            socket.emit(type === 'image' ? 'image-upload' : 'audio-upload', file);
-        }
-    };
-    input.click();
-}
+function saveProfile() {
+    const newUsername = document.getElementById("change-username").value;
 
-function contactCreators() {
-    alert('Alvin Pieterson: https://wa.me/233533255746\nBlaise Dave: https://wa.me/50946904797');
+    if (newUsername) {
+        loggedInUser.username = newUsername;
+        alert("Profile updated!");
+    }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Sign Up and Sign In Screen -->
     <div id="login-screen">
         <div class="login-container">
-            <h2>Sign Up to Blackchat</h2>
+            <h2>Sign up to Blackchat</h2>
             <input type="text" id="username" placeholder="Enter your username">
-            <button id="sign-up-btn" onclick="joinChat()">Sign Up</button>
+            <button onclick="signUp()">Sign Up</button>
+            <p>Already have an account? <a href="#" onclick="showSignIn()">Sign In</a></p>
         </div>
     </div>
 
-    <!-- Chat Screen -->
+    <div id="sign-in-screen" style="display: none;">
+        <div class="login-container">
+            <h2>Sign in to Blackchat</h2>
+            <input type="text" id="username-signin" placeholder="Enter your username">
+            <button onclick="signIn()">Sign In</button>
+            <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a></p>
+        </div>
+    </div>
+
     <div id="chat-screen" style="display: none;">
         <div id="header">
             <h3>Blackchat</h3>
@@ -29,7 +37,7 @@
             <button id="voice-btn" onclick="toggleVoiceRecording()">
                 <i class="fas fa-microphone"></i>
             </button>
-            <button id="send-btn" onclick="sendMessage()">
+            <button onclick="sendMessage()">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>

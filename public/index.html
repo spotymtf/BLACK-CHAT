@@ -8,23 +8,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
-    <!-- Signup Screen -->
-    <div id="signup-screen">
-        <div class="signup-container">
+    <div id="login-screen">
+        <div class="login-container">
             <h2>Sign up to Blackchat</h2>
-            <input type="text" id="name" placeholder="Enter your name">
+            <input type="text" id="username" placeholder="Enter your username">
             <input type="text" id="number" placeholder="Enter your number">
-            <button onclick="signUp()">Sign Up</button>
-            <p class="creator-info">Created by Alvin Pieterson & Spoty MTF</p>
+            <button onclick="joinChat()">Sign Up</button>
+            <div style="margin-top: 1rem;">
+                <p>Created by: Alvin Pieterson and Spoty MTF</p>
+                <button onclick="showCreators()">Contact Creators</button>
+            </div>
         </div>
     </div>
 
-    <!-- Chat Screen -->
     <div id="chat-screen" style="display: none;">
         <div id="chat-header">
             <h1>Blackchat</h1>
-            <button id="profile-btn" onclick="openProfile()">Profile</button>
+            <button onclick="openProfile()">Profile</button>
         </div>
         <div id="messages"></div>
         <div class="input-area">
@@ -38,17 +38,16 @@
         </div>
     </div>
 
-    <!-- Modal for Editing and Deleting Messages -->
-    <div id="edit-message-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeEditModal()">&times;</span>
-            <textarea id="edit-message-content" placeholder="Edit your message"></textarea>
-            <button onclick="saveEditedMessage()">Save</button>
-            <button onclick="deleteMessage()">Delete</button>
-        </div>
-    </div>
-
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
+
+    <div id="profile-screen" style="display: none;">
+        <div class="profile-container">
+            <h2>Your Profile</h2>
+            <p>Username: <span id="profile-username"></span></p>
+            <p>Number: <span id="profile-number"></span></p>
+            <button onclick="closeProfile()">Close</button>
+        </div>
+    </div>
 </body>
 </html>

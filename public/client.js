@@ -4,33 +4,23 @@ let audioChunks = [];
 
 function joinChat() {
     const username = document.getElementById('username').value.trim();
-    const number = document.getElementById('number').value.trim();
-    if (username && number) {
+    if (username) {
+        // Hide the login screen
         document.getElementById('login-screen').style.display = 'none';
+        // Show the chat screen
         document.getElementById('chat-screen').style.display = 'flex';
-        document.getElementById('profile-username').innerText = username;
-        document.getElementById('profile-number').innerText = number;
-        socket.emit('join', { username, number });
+        // Emit the username to the server
+        socket.emit('join', username);
+    } else {
+        alert('Please enter a valid username and number.');
     }
-}
-
-function showCreators() {
-    alert("Creators: Alvin Pieterson - +1234567890, Spoty MTF - +0987654321");
-}
-
-function openProfile() {
-    document.getElementById('profile-screen').style.display = 'flex';
-}
-
-function closeProfile() {
-    document.getElementById('profile-screen').style.display = 'none';
 }
 
 function sendMessage() {
     const input = document.getElementById('message-input');
     const message = input.value.trim();
     if (message) {
-        socket.emit('chat-message', { text: message, sender: socket.id });
+        socket.emit('chat-message', message);
         input.value = '';
     }
 }
@@ -50,7 +40,7 @@ async function toggleVoiceRecording() {
 
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });
-                socket.emit('voice-message', { audio: audioBlob, sender: socket.id });
+                socket.emit('voice-message', audioBlob);
                 stream.getTracks().forEach(track => track.stop());
             };
 
@@ -72,7 +62,7 @@ socket.on('chat-message', (data) => {
     messageDiv.className = `message ${data.sender === socket.id ? 'sent' : 'received'}`;
     
     messageDiv.innerHTML = `
-        <div class="message-content" data-sender="${data.sender}" data-id="${data.id}">
+        <div class="message-content">
             <strong>${data.username}:</strong>
             <p>${data.text}</p>
             <div class="timestamp">${data.timestamp}</div>
@@ -91,7 +81,7 @@ socket.on('voice-message', (data) => {
     const audio = new Audio(URL.createObjectURL(new Blob([data.audio], { type: 'audio/ogg; codecs=opus' })));
     
     messageDiv.innerHTML = `
-        <div class="message-content" data-sender="${data.sender}" data-id="${data.id}">
+        <div class="message-content">
             <strong>${data.username}:</strong>
             <p>
                 <button onclick="this.nextElementSibling.play()">
@@ -125,41 +115,3 @@ document.getElementById('message-input').addEventListener('keypress', (e) => {
         sendMessage();
     }
 });
-
-// Long press to show edit/delete popup
-document.getElementById('messages').addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    const messageContent = e.target.closest('.message-content');
-    if (messageContent) {
-        const messageId = messageContent.getAttribute('data-id');
-        const messageSender = messageContent.getAttribute('data-sender');
-        
-        if (messageSender === socket.id) {
-            const popup = document.createElement('div');
-            popup.className = 'edit-delete-popup';
-            popup.innerHTML = `
-                <button onclick="editMessage('${messageId}')">Edit</button>
-                <button onclick="deleteMessage('${messageId}')">Delete</button>
-            `;
-            document.body.appendChild(popup);
-            popup.style.left = e.pageX + 'px';
-            popup.style.top = e.pageY + 'px';
-
-            document.addEventListener('click', () => {
-                popup.remove();
-            }, { once: true });
-        }
-    }
-});
-
-function editMessage(id) {
-    const messageContent = document.querySelector(`.message-content[data-id="${id}"] p`);
-    const text = prompt("Edit your message:", messageContent.textContent);
-    if (text !== null && text.trim() !== "") {
-        socket.emit('edit-message', { id, text });
-    }
-}
-
-function deleteMessage(id) {
-    socket.emit('delete-message', { id });
-}

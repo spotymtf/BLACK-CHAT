@@ -1,58 +1,34 @@
 const socket = io();
-
 let mediaRecorder;
 let audioChunks = [];
 
-/* AUTH FUNCTIONALITY */
-function switchToLogin() {
-    document.getElementById('sign-up-container').classList.add('hidden');
-    document.getElementById('login-container').classList.remove('hidden');
-}
-
-function switchToSignUp() {
-    document.getElementById('login-container').classList.add('hidden');
-    document.getElementById('sign-up-container').classList.remove('hidden');
-}
-
-function signUp() {
-    const username = document.getElementById('signup-username').value.trim();
-    const number = document.getElementById('signup-number').value.trim();
-    const password = document.getElementById('signup-password').value.trim();
-
-    if (username && number && password) {
-        alert('Sign Up Successful!');
-        switchToLogin();
-    } else {
-        alert('All fields are required.');
-    }
-}
-
-function logIn() {
-    const usernameOrNumber = document.getElementById('login-username-or-number').value.trim();
-    const password = document.getElementById('login-password').value.trim();
-
-    if (usernameOrNumber && password) {
-        alert('Log In Successful!');
-        document.getElementById('auth-screen').style.display = 'none';
+function joinChat() {
+    const username = document.getElementById('username').value.trim();
+    if (username) {
+        document.getElementById('login-screen').style.display = 'none';
         document.getElementById('chat-screen').style.display = 'flex';
-    } else {
-        alert('Invalid credentials.');
+        socket.emit('join', username);
     }
 }
 
-/* CHAT FUNCTIONALITY */
 function sendMessage() {
     const input = document.getElementById('message-input');
     const message = input.value.trim();
+
     if (message) {
-        socket.emit('chat-message', message);
-        input.value = '';
+        // Emit message to the server
+        socket.emit('chat-message', { text: message, timestamp: new Date().toLocaleTimeString() });
+
+        // Add the message to the chat locally for immediate feedback
+        addMessageToChat({ username: 'You', text: message, timestamp: new Date().toLocaleTimeString(), sender: 'self' });
+
+        input.value = ''; // Clear the input
     }
 }
 
-/* VOICE RECORDING */
 async function toggleVoiceRecording() {
     const voiceBtn = document.getElementById('voice-btn');
+    
     if (!mediaRecorder || mediaRecorder.state === 'inactive') {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -66,13 +42,14 @@ async function toggleVoiceRecording() {
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });
                 socket.emit('voice-message', audioBlob);
-                stream.getTracks().forEach((track) => track.stop());
+                stream.getTracks().forEach(track => track.stop());
             };
 
             mediaRecorder.start();
             voiceBtn.classList.add('recording');
         } catch (err) {
-            console.error('Microphone access denied:', err);
+            console.error('Error accessing microphone:', err);
+            alert('Error accessing microphone.');
         }
     } else {
         mediaRecorder.stop();
@@ -80,27 +57,109 @@ async function toggleVoiceRecording() {
     }
 }
 
-/* PROFILE FUNCTIONALITY */
-function showProfile() {
-    document.getElementById('chat-screen').style.display = 'none';
-    document.getElementById('profile-screen').style.display = 'flex';
+function addMessageToChat(data) {
+    const messages = document.getElementById('messages');
+    const messageDiv = document.createElement('div');
+
+    // Determine message class (sent or received)
+    messageDiv.className = `message ${data.sender === 'self' ? 'sent' : 'received'}`;
+
+    // Add message content
+    messageDiv.innerHTML = `
+        <div class="message-content">
+            <strong>${data.username}:</strong>
+            <p>${data.text}</p>
+            <div class="timestamp">${data.timestamp}</div>
+        </div>
+    `;
+
+    // Append to messages container and scroll to the bottom
+    messages.appendChild(messageDiv);
+    messages.scrollTop = messages.scrollHeight;
 }
 
-function saveProfile() {
-    const newUsername = document.getElementById('profile-username').value.trim();
-    if (newUsername) {
-        alert('Profile updated successfully.');
-    } else {
-        alert('Enter a valid username.');
+// Handle receiving messages from the server
+socket.on('chat-message', (data) => {
+    addMessageToChat(data);
+});
+
+// Handle voice messages
+socket.on('voice-message', (data) => {
+    const messages = document.getElementById('messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${data.sender === 'self' ? 'sent' : 'received'}`;
+
+    const audio = new Audio(URL.createObjectURL(new Blob([data.audio], { type: 'audio/ogg; codecs=opus' })));
+
+    messageDiv.innerHTML = `
+        <div class="message-content">
+            <strong>${data.username}:</strong>
+            <p>
+                <button onclick="this.nextElementSibling.play()">
+                    <i class="fas fa-play"></i>
+                </button>
+                <audio style="display:none"></audio>
+            </p>
+            <div class="timestamp">${data.timestamp}</div>
+        </div>
+    `;
+
+    messageDiv.querySelector('audio').src = URL.createObjectURL(new Blob([data.audio], { type: 'audio/ogg; codecs=opus' }));
+    messages.appendChild(messageDiv);
+    messages.scrollTop = messages.scrollHeight;
+});
+
+// Handle system messages
+socket.on('system-message', (data) => {
+    const messages = document.getElementById('messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'system-message';
+    messageDiv.innerHTML = `
+        <p>${data.text}</p>
+        <div class="timestamp">${data.timestamp}</div>
+    `;
+    messages.appendChild(messageDiv);
+    messages.scrollTop = messages.scrollHeight;
+});
+
+// Handle pressing Enter to send a message
+document.getElementById('message-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        sendMessage();
     }
-}
+});
 
-function logout() {
-    alert('Logged out.');
+// Profile Management Button
+document.getElementById('profile-management-btn').addEventListener('click', () => {
+    document.getElementById('profile-management-screen').style.display = 'flex';
+});
+
+document.getElementById('logout-btn').addEventListener('click', () => {
     location.reload();
-}
+});
 
-function backToChat() {
-    document.getElementById('profile-screen').style.display = 'none';
-    document.getElementById('chat-screen').style.display = 'flex';
-}
+document.getElementById('change-profile-btn').addEventListener('click', () => {
+    const newUsername = prompt('Enter new username:');
+    if (newUsername) {
+        socket.emit('update-profile', { username: newUsername });
+        alert('Username updated successfully!');
+    }
+});
+
+document.getElementById('change-picture-btn').addEventListener('click', () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                socket.emit('update-profile-picture', { picture: reader.result });
+                alert('Profile picture updated successfully!');
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    fileInput.click();
+});

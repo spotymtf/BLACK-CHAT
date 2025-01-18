@@ -9,14 +9,14 @@ body {
     background-color: #f0f2f5;
 }
 
-#signup-screen {
+#login-screen {
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.signup-container {
+.login-container {
     background: white;
     padding: 2rem;
     border-radius: 8px;
@@ -24,7 +24,7 @@ body {
     text-align: center;
 }
 
-.signup-container input {
+.login-container input {
     width: 100%;
     padding: 0.8rem;
     margin: 1rem 0;
@@ -32,7 +32,7 @@ body {
     border-radius: 4px;
 }
 
-.signup-container button {
+.login-container button {
     background: #0084ff;
     color: white;
     border: none;
@@ -41,28 +41,28 @@ body {
     cursor: pointer;
 }
 
-.chat-screen {
+#chat-screen {
     max-width: 800px;
     margin: 0 auto;
     height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 #chat-header {
+    background: #0084ff;
+    color: white;
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    background-color: #0084ff;
-    color: white;
 }
 
 #messages {
     flex: 1;
     overflow-y: auto;
     padding: 1rem;
-    background-color: white;
 }
 
 .message {
@@ -127,7 +127,7 @@ body {
 }
 
 #voice-btn {
-    background:#0084ff;
+    background: #0084ff;
 }
 
 #voice-btn.recording {
@@ -141,44 +141,37 @@ body {
     100% { transform: scale(1); }
 }
 
-/* Modal Styles */
-.modal {
-    display: none; /* Hidden by default */
+/* Profile screen */
+#profile-screen {
     position: fixed;
-    z-index: 1;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.5);
+    display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 }
 
-.modal-content {
+.profile-container {
     background: white;
-    margin: 10% auto;
     padding: 2rem;
     border-radius: 8px;
     width: 300px;
     text-align: center;
 }
 
-.close {
-    position: absolute;
-    right: 15px;
-    top: 10px;
-    color: #aaa;
-    cursor: pointer;
+.profile-container h2 {
+    margin-bottom: 1rem;
 }
 
-/* Profile Button */
-#profile-btn {
+.profile-container button {
     background: #0084ff;
     color: white;
-    padding: 0.5rem 1rem;
     border: none;
+    padding: 0.8rem 1.5rem;
     border-radius: 4px;
     cursor: pointer;
 }

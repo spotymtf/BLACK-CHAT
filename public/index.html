@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,56 +8,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Authentication Screen -->
-    <div id="auth-screen">
-        <div id="sign-up-container" class="auth-container">
-            <h2>Sign Up to BlackChat</h2>
-            <input type="text" id="signup-username" placeholder="Enter Username">
-            <input type="text" id="signup-number" placeholder="Enter Mobile Number">
-            <input type="password" id="signup-password" placeholder="Enter Password">
-            <button onclick="signUp()">Sign Up</button>
-            <p>Already have an account? <a href="#" onclick="switchToLogin()">Log In</a></p>
-        </div>
-
-        <div id="login-container" class="auth-container hidden">
-            <h2>Log In to BlackChat</h2>
-            <input type="text" id="login-username-or-number" placeholder="Username or Mobile Number">
-            <input type="password" id="login-password" placeholder="Password">
-            <button onclick="logIn()">Log In</button>
-            <p>Don't have an account? <a href="#" onclick="switchToSignUp()">Sign Up</a></p>
+    <!-- Sign Up and Sign In Screen -->
+    <div id="login-screen">
+        <div class="login-container">
+            <h2>Sign Up to Blackchat</h2>
+            <input type="text" id="username" placeholder="Enter your username">
+            <button id="sign-up-btn" onclick="joinChat()">Sign Up</button>
         </div>
     </div>
 
     <!-- Chat Screen -->
     <div id="chat-screen" style="display: none;">
-        <header class="chat-header">
-            <h2>BlackChat</h2>
-            <button class="profile-btn" onclick="showProfile()">
-                <i class="fas fa-user-circle"></i>
-            </button>
-        </header>
+        <div id="header">
+            <h3>Blackchat</h3>
+            <button id="profile-btn" onclick="manageProfile()">Profile</button>
+        </div>
         <div id="messages"></div>
         <div class="input-area">
             <input type="text" id="message-input" placeholder="Write your message...">
             <button id="voice-btn" onclick="toggleVoiceRecording()">
                 <i class="fas fa-microphone"></i>
             </button>
-            <button onclick="sendMessage()">
+            <button id="send-btn" onclick="sendMessage()">
                 <i class="fas fa-paper-plane"></i>
             </button>
-        </div>
-    </div>
-
-    <!-- Profile Management Screen -->
-    <div id="profile-screen" style="display: none;">
-        <div class="profile-container">
-            <h2>Profile Management</h2>
-            <input type="text" id="profile-username" placeholder="Update Username">
-            <input type="file" id="profile-picture" style="display: none;">
-            <label for="profile-picture" class="file-upload">Upload Profile Picture</label>
-            <button onclick="saveProfile()">Save Changes</button>
-            <button onclick="logout()">Log Out</button>
-            <button onclick="backToChat()">Back to Chat</button>
         </div>
     </div>
 

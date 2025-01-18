@@ -8,32 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Login Screen -->
     <div id="login-screen">
         <div class="login-container">
             <h2>Sign up to Blackchat</h2>
-            <input type="text" id="username" placeholder="Enter your username">
-            <button onclick="signUp()">Sign Up</button>
-            <p>Already have an account? <a href="#" onclick="showSignIn()">Sign In</a></p>
+            <input type="text" id="username" placeholder="Enter your number">
+            <button onclick="joinChat()">Send</button>
         </div>
     </div>
 
-    <!-- Sign In Screen -->
-    <div id="sign-in-screen" style="display: none;">
-        <div class="login-container">
-            <h2>Sign in to Blackchat</h2>
-            <input type="text" id="username-signin" placeholder="Enter your username">
-            <button onclick="signIn()">Sign In</button>
-            <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a></p>
-        </div>
-    </div>
-
-    <!-- Chat Screen -->
     <div id="chat-screen" style="display: none;">
-        <div id="header">
-            <h3>Blackchat</h3>
-            <button id="profile-btn" onclick="manageProfile()">Profile</button>
-        </div>
         <div id="messages"></div>
         <div class="input-area">
             <input type="text" id="message-input" placeholder="Write your message...">
@@ -43,6 +26,16 @@
             <button onclick="sendMessage()">
                 <i class="fas fa-paper-plane"></i>
             </button>
+        </div>
+    </div>
+
+    <!-- Modal for Editing and Deleting Messages -->
+    <div id="edit-message-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <textarea id="edit-message-content" placeholder="Edit your message"></textarea>
+            <button onclick="saveEditedMessage()">Save</button>
+            <button onclick="deleteMessage()">Delete</button>
         </div>
     </div>
 

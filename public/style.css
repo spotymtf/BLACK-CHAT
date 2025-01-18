@@ -1,4 +1,4 @@
-/* Base Reset */
+/* Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -8,58 +8,43 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
-    color: #333;
 }
 
 /* Auth Screens */
-.auth-screen {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(to bottom right, #0084ff, #6c63ff);
-}
-
 .auth-container {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #0084ff, #6c63ff);
     text-align: center;
 }
 
+.auth-container.hidden {
+    display: none;
+}
+
 .auth-container input {
-    width: 100%;
+    width: 80%;
     padding: 0.8rem;
     margin: 1rem 0;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
-.file-upload {
-    display: inline-block;
-    margin-bottom: 1rem;
-    background: #0084ff;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-button {
-    padding: 0.8rem;
+.auth-container button {
     background: #0084ff;
     color: white;
     border: none;
-    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background 0.3s ease;
 }
 
-button:hover {
-    background: #005bb5;
+.auth-container p a {
+    color: white;
+    text-decoration: underline;
 }
 
 /* Chat Screen */
@@ -67,20 +52,45 @@ button:hover {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    background: white;
 }
 
 .chat-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 1rem;
     background: #0084ff;
     color: white;
 }
 
-.messages {
+#messages {
     flex: 1;
     padding: 1rem;
     overflow-y: auto;
-    background: #f0f2f5;
+}
+
+.input-area {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #fff;
+    border-top: 1px solid #ddd;
+}
+
+.input-area input {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Profile Screen */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #0084ff, #6c63ff);
+    text-align: center;
 }

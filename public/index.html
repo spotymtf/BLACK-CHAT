@@ -8,24 +8,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Login Screen -->
     <div id="login-screen">
         <div class="login-container">
             <h2>Sign up to Blackchat</h2>
-            <input type="text" id="username" placeholder="Enter your username">
-            <input type="text" id="number" placeholder="Enter your number">
-            <button onclick="joinChat()">Sign Up</button>
-            <div style="margin-top: 1rem;">
-                <p>Created by: Alvin Pieterson and Spoty MTF</p>
-                <button onclick="showCreators()">Contact Creators</button>
-            </div>
+            <input type="text" id="username" placeholder="Enter your number">
+            <button onclick="joinChat()">Send</button>
         </div>
     </div>
 
+    <!-- Chat Screen -->
     <div id="chat-screen" style="display: none;">
-        <div id="chat-header">
-            <h1>Blackchat</h1>
-            <button onclick="openProfile()">Profile</button>
-        </div>
         <div id="messages"></div>
         <div class="input-area">
             <input type="text" id="message-input" placeholder="Write your message...">
@@ -40,14 +33,5 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>
-
-    <div id="profile-screen" style="display: none;">
-        <div class="profile-container">
-            <h2>Your Profile</h2>
-            <p>Username: <span id="profile-username"></span></p>
-            <p>Number: <span id="profile-number"></span></p>
-            <button onclick="closeProfile()">Close</button>
-        </div>
-    </div>
 </body>
 </html>

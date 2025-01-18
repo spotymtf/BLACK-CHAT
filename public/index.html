@@ -3,29 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Sign-up Screen -->
-    <div id="signup-screen">
-        <div class="signup-container">
-            <h2>Sign up to BlackChat</h2>
-            <p>Creators: Alvin Pieterson & Spoty MTF</p>
-            <label for="username">Enter your username</label>
-            <input type="text" id="username" placeholder="Username">
-            <label for="phone-number">Enter your phone number</label>
-            <input type="text" id="phone-number" placeholder="Phone number">
-            <button onclick="signUp()">Sign Up</button>
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-container">
+            <h2>Sign up to Blackchat</h2>
+            <p>Enter your number to get started.</p>
+            <div class="country-selector">
+                <select>
+                    <option value="ghana">Ghana</option>
+                    <option value="nigeria">Nigeria</option>
+                    <option value="usa">USA</option>
+                    <option value="uk">UK</option>
+                </select>
+            </div>
+            <div class="phone-input-container">
+                <span>+233</span>
+                <input type="tel" id="username" placeholder="Enter your number">
+            </div>
+            <button onclick="joinChat()">Send</button>
         </div>
     </div>
 
     <!-- Chat Screen -->
     <div id="chat-screen" style="display: none;">
-        <header>
-            <h1>BlackChat</h1>
-            <button id="profile-btn">Profile</button>
-        </header>
         <div id="messages"></div>
         <div class="input-area">
             <input type="text" id="message-input" placeholder="Write your message...">
@@ -37,7 +42,8 @@
             </button>
         </div>
     </div>
+
     <script src="/socket.io/socket.io.js"></script>
-    <script src="scripts.js"></script>
+    <script src="client.js"></script>
 </body>
 </html>

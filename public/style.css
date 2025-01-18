@@ -1,3 +1,4 @@
+/* Global Reset */
 * {
     margin: 0;
     padding: 0;
@@ -6,47 +7,119 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-}
-
-#login-screen {
-    height: 100vh;
+    background-color: #121212;
+    color: #ffffff;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-.login-container {
-    background: white;
+/* Sign-up Screen Styling */
+#signup-screen {
+    width: 100%;
+    max-width: 400px;
+}
+
+.signup-container {
+    background: #1e1e1e;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     text-align: center;
 }
 
-.login-container input {
+.signup-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #00aaff;
+}
+
+.signup-container p {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    color: #cccccc;
+}
+
+.signup-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #ffffff;
+    text-align: left;
+}
+
+.signup-container input {
     width: 100%;
     padding: 0.8rem;
-    margin: 1rem 0;
-    border: 1px solid #ddd;
+    margin-bottom: 1.5rem;
+    border: 1px solid #444;
     border-radius: 4px;
+    background: #1e1e1e;
+    color: #ffffff;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.login-container button {
-    background: #0084ff;
-    color: white;
+.signup-container input:focus {
+    border-color: #00aaff;
+    box-shadow: 0 0 8px #00aaff;
+}
+
+.signup-container button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #00aaff;
     border: none;
-    padding: 0.8rem 1.5rem;
     border-radius: 4px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 170, 255, 0.5);
+    transition: background 0.3s, transform 0.2s;
 }
 
+.signup-container button:hover {
+    background: #0088cc;
+}
+
+.signup-container button:active {
+    transform: scale(0.98);
+}
+
+/* Chat Screen Styling */
 #chat-screen {
-    max-width: 800px;
-    margin: 0 auto;
-    height: 100vh;
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    max-width: 800px;
+    background: #1e1e1e;
+    color: #ffffff;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #121212;
+    border-bottom: 1px solid #333;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    color: #00aaff;
+}
+
+header button {
+    background: #00aaff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 #messages {
@@ -55,78 +128,29 @@ body {
     padding: 1rem;
 }
 
-.message {
-    margin-bottom: 1rem;
-    max-width: 70%;
-}
-
-.message.received {
-    margin-right: auto;
-}
-
-.message.sent {
-    margin-left: auto;
-}
-
-.message-content {
-    background: white;
-    padding: 0.8rem;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
-
-.message.sent .message-content {
-    background: #0084ff;
-    color: white;
-}
-
-.system-message {
-    text-align: center;
-    color: rgba(17, 17, 17, 0.884);
-    margin: 1rem 0;
-}
-
-.timestamp {
-    font-size: 0.8rem;
-    color: rgba(14, 13, 13, 0.808);
-    margin-top: 0.3rem;
-}
-
 .input-area {
-    padding: 1rem;
-    background: white;
     display: flex;
-    gap: 0.5rem;
-    border-top: 1px solid #ddd;
+    align-items: center;
+    padding: 1rem;
+    background: #121212;
+    border-top: 1px solid #333;
 }
 
 .input-area input {
     flex: 1;
     padding: 0.8rem;
-    border: 1px solid #ddd;
+    border: 1px solid #444;
     border-radius: 4px;
+    background: #1e1e1e;
+    color: #ffffff;
+    margin-right: 0.5rem;
 }
 
 .input-area button {
-    padding: 0.8rem;
-    background: #0084ff;
-    color: white;
+    background: #00aaff;
     border: none;
+    color: white;
+    padding: 0.8rem;
     border-radius: 4px;
     cursor: pointer;
-}
-
-#voice-btn {
-    background:#0084ff;
-}
-
-#voice-btn.recording {
-    background: #0084ff;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
 }

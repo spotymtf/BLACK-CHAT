@@ -2,8 +2,8 @@ const socket = io();
 let mediaRecorder;
 let audioChunks = [];
 
-// Join Chat Functionality
-function joinChat() {
+// Sign up
+function signUp() {
     const username = document.getElementById('username').value.trim();
     if (username) {
         document.getElementById('login-screen').style.display = 'none';
@@ -12,17 +12,35 @@ function joinChat() {
     }
 }
 
-// Send Message
+// Sign in
+function signIn() {
+    const username = document.getElementById('username-signin').value.trim();
+    if (username) {
+        document.getElementById('sign-in-screen').style.display = 'none';
+        document.getElementById('chat-screen').style.display = 'flex';
+        socket.emit('join', username);
+    }
+}
+
+function showSignUp() {
+    document.getElementById('sign-in-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+}
+
+function showSignIn() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('sign-in-screen').style.display = 'flex';
+}
+
 function sendMessage() {
     const input = document.getElementById('message-input');
     const message = input.value.trim();
     if (message) {
-        socket.emit('chat-message', { text: message });
+        socket.emit('chat-message', message);
         input.value = '';
     }
 }
 
-// Voice Message Recording
 async function toggleVoiceRecording() {
     const voiceBtn = document.getElementById('voice-btn');
     if (!mediaRecorder || mediaRecorder.state === 'inactive') {
@@ -52,12 +70,10 @@ async function toggleVoiceRecording() {
     }
 }
 
-// Profile Management Button
 function manageProfile() {
     alert('Profile management coming soon!');
 }
 
-// Socket Event Listeners
 socket.on('chat-message', (data) => {
     const messages = document.getElementById('messages');
     const messageDiv = document.createElement('div');
@@ -65,23 +81,6 @@ socket.on('chat-message', (data) => {
     messageDiv.innerHTML = `
         <div class="message-content">
             <p>${data.text}</p>
-        </div>
-    `;
-    messages.appendChild(messageDiv);
-    messages.scrollTop = messages.scrollHeight;
-});
-
-socket.on('voice-message', (audioBlob) => {
-    const messages = document.getElementById('messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = 'message received';
-    const audioURL = URL.createObjectURL(audioBlob);
-
-    messageDiv.innerHTML = `
-        <div class="message-content">
-            <audio controls>
-                <source src="${audioURL}" type="audio/ogg">
-            </audio>
         </div>
     `;
     messages.appendChild(messageDiv);
